@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { PathFinderProvider } from './PathFinderContext/PathFinderContext.js'
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <PathFinderProvider>
+      <App />
+    </PathFinderProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
