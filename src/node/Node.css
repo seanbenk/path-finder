@@ -1,0 +1,31 @@
+.node{
+    display: inline-block;
+    margin: 1px;
+    height: 30px;
+    width: 30px;
+    background-color: aquamarine;
+}
+
+.start-node{
+    background-color: blue;
+}
+
+.end-node{
+    background-color: red;
+}
+
+.wall-node{
+    background-color: navy;
+}
+
+.start-node.visited-node{
+    background-color: blue;
+}
+
+.end-node.visited-node{
+    background-color: rgb(162, 0, 0);
+}
+
+.visited-node{
+    background-color: rgb(77, 159, 131);
+}
