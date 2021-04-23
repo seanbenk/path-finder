@@ -1,8 +1,11 @@
 import { flattenDeep, cloneDeep } from 'lodash'
 
-export function dijkstra(grid, startCoord){
+export default function dijkstra(grid){
     //Clone the grid array and set our starting distance to 0 (everything else has a distance of Infinity)
     grid = cloneDeep(grid)
+
+    const { startCoord, endCoord } = getStartEndCoords(grid)
+
     grid[startCoord.row][startCoord.col].distance = 0
 
     const visitedNodesInOrder = []
@@ -33,4 +36,20 @@ function sortByDistance(arr){
 
 function idxFromCoord(arr, row, col){
     return arr.findIndex(node => node.row === row && node.col === col)
+}
+
+function getStartEndCoords(grid){
+    const coords = {startCoord:{}, endCoord:{}}
+    for(const row of grid){
+        for(const node of row){
+            if(node.isStartPoint){
+                coords.startCoord.row = node.row
+                coords.startCoord.col = node.col
+            } else if(node.isEndPoint){
+                coords.endCoord.row = node.row
+                coords.endCoord.col = node.col
+            }
+        }
+    }
+    return coords
 }

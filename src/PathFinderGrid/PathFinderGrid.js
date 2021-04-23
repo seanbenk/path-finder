@@ -6,41 +6,49 @@ import { dijkstra } from '../dijkstra/dijkstra.js'
 
 export default function PathFinderGrid(){
 
-    const { nodesGrid, makeNewGrid } = useContext(PathFinderContext)
+    const { nodesGrid, makeNewGrid, setIsMouseDown, selectNode, runDijkstra, resetGrid } = useContext(PathFinderContext)
 
     const renderNodesGrid = () => {
         return (
-            <section className='path-finder-grid'>
+            <section className='path-finder-grid' onMouseDown={setMouseDown} onMouseUp={setMouseUp}>
                 {nodesGrid.map(currentRow => {
-                    return ( <div>
-                        {currentRow.map((node, nodeIdx) => {
-                        return (
-                            <Node 
-                            key={nodeIdx} 
-                            data={{
-                                isStartPoint: node.isStartPoint,
-                                isEndPoint: node.isEndPoint,
-                                isWall: node.isWall,
-                                isVisited: node.isVisited
-                                }}/>
-                            )
-                        })}
-                        </div>
-                    )
+                        return (currentRow.map((node, nodeIdx) => {
+                            return (
+                                        <Node
+                                        key={node.id} 
+                                        data={{
+                                        id: node.id,
+                                        row: node.row,
+                                        col: node.col,
+                                        isStartPoint: node.isStartPoint,
+                                        isEndPoint: node.isEndPoint,
+                                        isWall: node.isWall,
+                                        isVisited: node.isVisited
+                                    }}/>                            
+                                )
+                            })
+                        )
                 })}
             </section>
         )
     }
 
+    function setMouseDown(e){
+        setIsMouseDown(true)
+        selectNode(e.target.dataset.row, e.target.dataset.col)
+    }
+
+    function setMouseUp(){
+        setIsMouseDown(false)
+    }
+
     return (
         <div>
             <div>
-                <button onClick={() => makeNewGrid(5,2)}>get grid</button>
-                <button onClick={() => console.log(nodesGrid)}>log state</button>
+                {/* <button onClick={runDijkstra}>Dijkstra</button> */}
+                <button onClick={resetGrid}>Reset Grid</button>
             </div>
-            <div className='path-finder-grid'>
                 {renderNodesGrid()}
-            </div>
         </div>
     )
 }
