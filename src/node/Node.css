@@ -2,7 +2,7 @@
     display: inline-block;
     height: 40px;
     width: 40px;
-    background-color: aquamarine;
+    background-color: rgb(164, 230, 208);
 }
 
 .start-node{
@@ -18,13 +18,21 @@
 }
 
 .start-node.visited-node{
-    background-color: blue;
+    background-color: cyan;
 }
 
 .end-node.visited-node{
     background-color: rgb(162, 0, 0);
 }
 
+.end-node.visited-node.path-node{
+    background-color: green;
+}
+
 .visited-node{
     background-color: rgb(77, 159, 131);
+}
+
+.path-node{
+    background-color: yellow;
 }
