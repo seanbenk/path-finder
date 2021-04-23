@@ -1,4 +1,8 @@
 .path-finder-grid{
-    width: 500px;
-    height: 1000px;
+    margin: 0 auto;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    width: 800px;
+    gap: 1px;
 }
