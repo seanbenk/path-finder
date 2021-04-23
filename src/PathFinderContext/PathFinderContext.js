@@ -1,5 +1,5 @@
 import { createContext, useState } from 'react'
-import { flattenDeep, cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash'
 import dijkstra from '../dijkstra/dijkstra.js'
 
 
@@ -60,9 +60,13 @@ export function PathFinderProvider(props){
 
     const resetGrid = () => {
         setNodesGrid((prevGrid) => {
+            console.log(prevGrid)
             return prevGrid.map(row => {
                 return row.map( node => {
                     node.isWall = false
+                    node.isVisited = false
+                    node.isPath = false
+                    node.distance = Infinity
                     return node
                 })
             })
@@ -70,7 +74,57 @@ export function PathFinderProvider(props){
     }
 
     const runDijkstra = () => {
-        console.log(dijkstra(nodesGrid))
+        const { visitedNodesInOrder, nodesOfShortestPath } = dijkstra(nodesGrid)
+        console.log(visitedNodesInOrder)
+        console.log(nodesOfShortestPath)
+        drawDijkstra(visitedNodesInOrder, nodesOfShortestPath)
+    }
+
+    const drawDijkstra = (visitedNodesInOrder, shortestPath, index = 0) => {
+        if(index < visitedNodesInOrder.length){
+            setNodesGrid((prevGrid) => {
+                return addVisitedNode(prevGrid, visitedNodesInOrder[index])
+            })
+            setTimeout(() => {
+                console.log('test')
+                drawDijkstra(visitedNodesInOrder, shortestPath, index + 1)
+            }, 30);
+        } else {
+            drawShortestPath(shortestPath)
+        }
+    }
+
+    const drawShortestPath = (shortestPath, index = 0) => {
+        if(index < shortestPath.length){
+            setNodesGrid((prevGrid) => {
+                return addPathNode(prevGrid, shortestPath[index])
+            })
+            setTimeout(() => {
+                drawShortestPath(shortestPath, index + 1)
+            }, 100);
+        }
+    }
+
+    const addVisitedNode = (grid, coord) =>{
+        return grid.map(row => {
+            return row.map( node => {
+                if(node.row === coord.row && node.col === coord.col){
+                    node.isVisited = true
+                    return node
+                } else{ return node }
+            }) 
+        })
+    }
+
+    const addPathNode = (grid, coord) =>{
+        return grid.map(row => {
+            return row.map( node => {
+                if(node.row === coord.row && node.col === coord.col){
+                    node.isPath = true
+                    return node
+                } else{ return node }
+            }) 
+        })
     }
 
     return (
@@ -84,7 +138,7 @@ export function PathFinderProvider(props){
 }
 
 class NodeObj{
-    constructor(id, row, col, isStartPoint, isEndPoint, gridWidth, gridHeight, isWall = false, isVisited = false){
+    constructor(id, row, col, isStartPoint, isEndPoint, gridWidth, gridHeight, isWall = false, isVisited = false, isPath = false){
         this.id = id
         this.row = row
         this.col = col 
@@ -94,6 +148,7 @@ class NodeObj{
         this.isEndPoint = isEndPoint
         this.isWall = isWall
         this.isVisited = isVisited
+        this.isPath = isPath
         this.distance = Infinity
     }
     //Gets the neighbouring coords of nodes that will exist in the current state (up, right, down, left)
