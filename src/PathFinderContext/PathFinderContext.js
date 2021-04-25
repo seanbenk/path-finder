@@ -1,13 +1,14 @@
 import { createContext, useState } from 'react'
 import { cloneDeep } from 'lodash'
 import dijkstra from '../dijkstra/dijkstra.js'
+import { findGridStartEnd, primsMazeGen } from '../mazeGeneration/mazeGeneration.js'
 
 
 export const PathFinderContext = createContext()
 
 export function PathFinderProvider(props){
 
-    const [nodesGrid, setNodesGrid] = useState(getNewGrid(20, 20, {row: 4, col: 3}, {row: 4, col: 6}))
+    const [nodesGrid, setNodesGrid] = useState(getNewGrid(21, 21, {row: 4, col: 3}, {row: 4, col: 6}))
 
     const [isMouseDown, setIsMouseDown] = useState(false)
 
@@ -86,7 +87,6 @@ export function PathFinderProvider(props){
                 return addVisitedNode(prevGrid, visitedNodesInOrder[index])
             })
             setTimeout(() => {
-                console.log('test')
                 drawDijkstra(visitedNodesInOrder, shortestPath, index + 1)
             }, 30);
         } else {
@@ -127,15 +127,34 @@ export function PathFinderProvider(props){
         })
     }
 
+    const newMaze = () => {
+        const { startPoint, endPoint } = findGridStartEnd(nodesGrid)
+        let idCounter = -1
+        const newMaze = primsMazeGen(nodesGrid).map((row, rowIdx) => row.map((node, colIdx) => {
+            idCounter++
+            if(node.type === 'path'){
+                return new NodeObj(idCounter, rowIdx, colIdx, false, false, nodesGrid[0].length, nodesGrid.length)
+            }
+            return new NodeObj(idCounter, rowIdx, colIdx, false, false, nodesGrid[0].length, nodesGrid.length, true)
+        }))
+        newMaze[startPoint.row][startPoint.col].isStartPoint = true
+        newMaze[endPoint.row][endPoint.col].isWall = false
+        newMaze[endPoint.row][endPoint.col].isEndPoint = true
+        setNodesGrid(newMaze)
+    }
+
     return (
         <PathFinderContext.Provider 
         value={{
-            nodesGrid, setNodesGrid, makeNewGrid, isMouseDown, setIsMouseDown, selectNode, updateNodes, selectedNode, resetGrid, runDijkstra
+            nodesGrid, setNodesGrid, makeNewGrid, isMouseDown, setIsMouseDown, selectNode, updateNodes, selectedNode, resetGrid, runDijkstra, newMaze
         }}>
             {props.children}
         </PathFinderContext.Provider>
     )
 }
+
+
+
 
 class NodeObj{
     constructor(id, row, col, isStartPoint, isEndPoint, gridWidth, gridHeight, isWall = false, isVisited = false, isPath = false){
@@ -150,6 +169,7 @@ class NodeObj{
         this.isVisited = isVisited
         this.isPath = isPath
         this.distance = Infinity
+        this.isVisitedMAZE = false
     }
     //Gets the neighbouring coords of nodes that will exist in the current state (up, right, down, left)
     getNeighbourCoords(){
@@ -164,7 +184,7 @@ class NodeObj{
     }
 }
 
-const getNewGrid = (width, height, startCoords, endCoords) => {
+export const getNewGrid = (width, height, startCoords, endCoords) => {
     const newGrid = []
     let nodeId = 0
     for(let row = 0; row < height; row++){

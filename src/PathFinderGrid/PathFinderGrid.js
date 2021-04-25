@@ -5,7 +5,7 @@ import Node from '../Node/Node.js'
 
 export default function PathFinderGrid(){
 
-    const { nodesGrid, setIsMouseDown, selectNode, runDijkstra, resetGrid } = useContext(PathFinderContext)
+    const { nodesGrid, setIsMouseDown, selectNode, runDijkstra, resetGrid,  newMaze } = useContext(PathFinderContext)
 
     const renderNodesGrid = () => {
         return (
@@ -46,6 +46,7 @@ export default function PathFinderGrid(){
             <div>
                 <button onClick={runDijkstra}>Dijkstra</button>
                 <button onClick={resetGrid}>Reset Grid</button>
+                <button onClick={newMaze}>New Maze</button>
             </div>
                 {renderNodesGrid()}
         </div>
