@@ -1,38 +1,115 @@
 .node{
-    display: inline-block;
-    height: 40px;
-    width: 40px;
-    background-color: rgb(164, 230, 208);
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+	animation: flip-wall-to-path 300ms linear;
 }
 
 .start-node{
-    background-color: blue;
+    background-color: #00afbb;
+    background-image: none;
 }
 
 .end-node{
-    background-color: red;
+    background-color: #e32c2c;
+    background-image: none;
 }
 
 .wall-node{
-    background-color: navy;
+    background-color: #7DD669;
+	animation: flip-path-to-wall 500ms linear;
 }
 
 .start-node.visited-node{
-    background-color: cyan;
+    background-color: #00afbb;
 }
 
 .end-node.visited-node{
-    background-color: rgb(162, 0, 0);
+    background-color: #e32c2c;
 }
 
 .end-node.visited-node.path-node{
-    background-color: green;
+    background-color: #F052A4;
 }
 
 .visited-node{
-    background-color: rgb(77, 159, 131);
+    background-color: #dedede;
 }
 
+/* rgb(77, 159, 131) */
+
 .path-node{
-    background-color: yellow;
+    background-size: cover;
+    background-color: #f7ea30;
+    filter: brightness(150%)
+}
+
+@-webkit-keyframes flip-path-to-wall {
+0% {
+    -webkit-transform: rotateX(0);
+    transform: rotateX(0);
+    background-color: #c6c6c6;
+}
+49%{
+    background-color: #c6c6c6;
+}
+50% {
+    background-color: #7DD669;
+}
+100% {
+    -webkit-transform: rotateX(-180deg);
+    transform: rotateX(-180deg);
+}
+}
+@keyframes flip-path-to-wall {
+0% {
+    -webkit-transform: rotateX(0);
+    transform: rotateX(0);
+    background-color: #c6c6c6;
+}
+49%{
+    background-color: #c6c6c6;
+}
+50% {
+    background-color: #7DD669;
+}
+100% {
+    -webkit-transform: rotateX(-180deg);
+    transform: rotateX(-180deg);
+}
+}
+
+@-webkit-keyframes flip-wall-to-path {
+0% {
+    -webkit-transform: rotateX(0);
+    transform: rotateX(0);
+    background-color: #7DD669;
+}
+49%{
+    background-color: #7DD669;
+}
+50% {
+    background-color: #c6c6c6;
+}
+100% {
+    -webkit-transform: rotateX(-180deg);
+    transform: rotateX(-180deg);
+}
+}
+@keyframes flip-wall-to-path {
+0% {
+    -webkit-transform: rotateX(0);
+    transform: rotateX(0);
+    background-color: #7DD669;
+}
+49%{
+    background-color: #7DD669;
+}
+50% {
+    background-color: #c6c6c6;
+}
+100% {
+    -webkit-transform: rotateX(-180deg);
+    transform: rotateX(-180deg);
+}
 }

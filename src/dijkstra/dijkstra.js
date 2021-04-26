@@ -36,7 +36,6 @@ export default function dijkstra(grid){
             return {  visitedNodesInOrder, nodesOfShortestPath }
         }
     }
-
     return {  visitedNodesInOrder, nodesOfShortestPath: false }
 }
 

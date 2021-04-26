@@ -1,8 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Freckle+Face&display=swap');
+
+nav{
+    width: 100vw;
+    height: 10vh;
+    background-color: #00C2D1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+nav ul{
+    margin: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+nav ul li{
+    font-family: 'Freckle Face', cursive;
+    font-size: 3rem;
+    color: #0A1045;
+    list-style: none;
+    transition: all linear 100ms;
+    outline: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+nav ul li:hover{
+    cursor: pointer;
+    color: #F9E900;
+}
+
+.grid-section{
+    width: 100vw;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .path-finder-grid{
-    margin: 0 auto;
+    background-color: #FFF;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(21, 1fr);
-    width: 800px;
-    gap: 1px;
+    width: 90%;
+    height: 90%;
+    grid-template-columns: repeat(25, 1fr);
+    border-radius: 10px;
+    overflow: hidden;
 }

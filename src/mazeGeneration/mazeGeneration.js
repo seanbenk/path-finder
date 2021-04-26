@@ -27,7 +27,7 @@ function getNeighbourCoords(grid, pointRow, pointCol){
     neighbourArr.push({row: pointRow, col: pointCol - 1})
     return neighbourArr
         .filter(node => node.row >= 0 && node.col  >= 0)
-        .filter(node => node.row < grid[0].length  && node.col  < grid.length)
+        .filter(node => node.row < grid.length  && node.col < grid[0].length)
 }
 
 function neighbourPathCount(grid, wall){
