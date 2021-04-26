@@ -8,11 +8,17 @@ export const PathFinderContext = createContext()
 
 export function PathFinderProvider(props){
 
-    const [nodesGrid, setNodesGrid] = useState(getNewGrid(21, 21, {row: 4, col: 3}, {row: 4, col: 6}))
+    const [nodesGrid, setNodesGrid] = useState(getNewGrid(25, 10, {row: 4, col: 3}, {row: 4, col: 6}))
 
     const [isMouseDown, setIsMouseDown] = useState(false)
 
     const [selectedNode, setSelectedNode] = useState(null)
+
+    const [gridMode, setGridMode] = useState(false)
+
+    function toggleGridMode(){
+        setGridMode(prevMode => !prevMode)
+    }
 
     //Takes a width and height and new start/end points, reset the nodes 
     const makeNewGrid = (width, height, startPointCoord, endPointCoord) => {
@@ -146,7 +152,7 @@ export function PathFinderProvider(props){
     return (
         <PathFinderContext.Provider 
         value={{
-            nodesGrid, setNodesGrid, makeNewGrid, isMouseDown, setIsMouseDown, selectNode, updateNodes, selectedNode, resetGrid, runDijkstra, newMaze
+            nodesGrid, setNodesGrid, makeNewGrid, isMouseDown, setIsMouseDown, selectNode, updateNodes, selectedNode, resetGrid, runDijkstra, newMaze, gridMode, toggleGridMode
         }}>
             {props.children}
         </PathFinderContext.Provider>
@@ -180,7 +186,7 @@ class NodeObj{
         neighbourArr.push({row: this.row, col: this.col - 1})
         return neighbourArr
             .filter(node => node.row >= 0 && node.col  >= 0)
-            .filter(node => node.row < this.gridWidth  && node.col  < this.gridHeight)
+            .filter(node => node.row < this.gridHeight  && node.col  < this.gridWidth)
     }
 }
 

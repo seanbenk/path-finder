@@ -5,7 +5,7 @@ import Node from '../Node/Node.js'
 
 export default function PathFinderGrid(){
 
-    const { nodesGrid, setIsMouseDown, selectNode, runDijkstra, resetGrid,  newMaze } = useContext(PathFinderContext)
+    const { nodesGrid, setIsMouseDown, selectNode, runDijkstra, resetGrid, newMaze, gridMode, toggleGridMode } = useContext(PathFinderContext)
 
     const renderNodesGrid = () => {
         return (
@@ -22,7 +22,9 @@ export default function PathFinderGrid(){
                                         isEndPoint: node.isEndPoint,
                                         isWall: node.isWall,
                                         isVisited: node.isVisited,
-                                        isPath: node.isPath
+                                        isPath: node.isPath,
+                                        gridMode,
+                                        roadType: getRoadType(node)
                                     }}/>                            
                                 )
                             })
@@ -30,6 +32,63 @@ export default function PathFinderGrid(){
                 })}
             </section>
         )
+    }
+
+    function getRoadType(node){
+        //nNodes = neighbourNodes
+        const nNodes = node.getNeighbourCoords().map(coord => nodesGrid[coord.row][coord.col]).filter(node => !node.isWall && !node.isStartPoint && !node.isEndPoint)
+
+        switch(nNodes.length){
+            case 0:
+                return 'all-road'
+                break;
+            case 1:
+                {const[nn1] = nNodes
+                    if(nn1.row > node.row){
+                        return 'single-road-bottom'
+                    } else if(nn1.row < node.row){
+                        return 'single-road-top'
+                    }
+                    else if(nn1.col < node.col){
+                        return 'single-road-left'
+                    } else if(nn1.col > node.col){
+                        return 'single-road-right'
+                    }
+                }
+                return 'straight-road'
+                break;
+            case 2:
+                {const[nn1, nn2] = nNodes
+                if(nn1.col === nn2.col){
+                    return 'straight-road-vertical'
+                } else if(nn1.row === nn2.row){
+                    return 'straight-road-horizontal'
+                } else if((nn1.row < node.row || nn2.row < node.row) && (nn1.col < node.col || nn2.col < node.col)){
+                    return 'corner-road-left-up'
+                } else if((nn1.row > node.row || nn2.row > node.row) && (nn1.col < node.col || nn2.col < node.col)){
+                    return 'corner-road-left-down'
+                } else if((nn1.row < node.row || nn2.row < node.row) && (nn1.col > node.col || nn2.col > node.col)){
+                    return 'corner-road-right-up'
+                } else if((nn1.row > node.row || nn2.row > node.row) && (nn1.col > node.col || nn2.col > node.col)){
+                    return 'corner-road-right-down'
+                }}                   
+                break;
+            case 3:
+                const [nn1, nn2, nn3] = nNodes
+                if((nn1.row <= node.row) && (nn2.row <= node.row) && (nn3.row <= node.row)){
+                    return 't-int-road-bottom'
+                } else if(((nn1.row >= node.row) && (nn2.row >= node.row) && (nn3.row >= node.row))){
+                    return 't-int-road-top'
+                } else if(((nn1.col >= node.col) && (nn2.col >= node.col) && (nn3.col >= node.col))){
+                    return 't-int-road-left'
+                }
+                return 't-int-road-right'
+                break;
+            case 4:
+                return 'all-road'
+                break;
+        }
+        return 'all-road'
     }
 
     function setMouseDown(e){
@@ -43,12 +102,21 @@ export default function PathFinderGrid(){
 
     return (
         <div>
-            <div>
-                <button onClick={runDijkstra}>Dijkstra</button>
-                <button onClick={resetGrid}>Reset Grid</button>
-                <button onClick={newMaze}>New Maze</button>
-            </div>
+            <nav>
+                <ul>
+                    <li onClick={runDijkstra}>Find Shortest Path</li>
+                    <li onClick={newMaze}>Generate Maze</li>
+                    <li onClick={resetGrid}>Reset Grid</li>
+                    <li onClick={toggleGridMode}>Grid/Road</li>
+                </ul>
+            </nav>
+            <section className="grid-section">
                 {renderNodesGrid()}
+            </section>
         </div>
     )
+}
+
+function nodeCornerPosition(node, nNodes){
+
 }
