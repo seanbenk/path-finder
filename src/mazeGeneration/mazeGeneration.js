@@ -1,36 +1,7 @@
-import { cloneDeep, shuffle, sample, remove } from 'lodash'
-import { getNewGrid } from '../PathFinderContext/PathFinderContext.js'
-
-export function generateMaze(grid){
-    const { startPoint, endPoint } = findGridStartEnd(grid)
-    grid = getNewGrid(grid[0].length, grid.length, startPoint, endPoint)
-    grid[startPoint.row][startPoint.col].isStartPoint = true
-    grid[startPoint.row][startPoint.col].isVisitedMAZE = true
-    grid[endPoint.row][endPoint.col].isEndPoint = true
-    const currPath = []
-    currPath.push(grid[startPoint.row][startPoint.col])
-
-    //!currPath[currPath.length - 1].isEndPoint
-    
-    let count = 0
-
-    while(count < 10){
-        console.log('hi')
-        const currNode = currPath[currPath.length - 1]
-        // grab the last element of the currPath array and find it's neighbour nodes, then get only the nodes that aren't walls
-        const neighbourNodes = shuffle(currNode.getNeighbourCoords().map(coord => grid[coord.row][coord.col]).filter(node => !node.isVisitedMAZE))
-        neighbourNodes.forEach(node => node.isVisitedMAZE = true)
-        currPath.push(neighbourNodes.pop())
-        neighbourNodes.forEach(node => {
-            grid[node.row][node.col].isWall = true
-        });
-        count++
-    }
-    return grid
-}
+import { sample, remove } from 'lodash'
 
 export function primsMazeGen(grid){
-    const { startPoint, endPoint } = findGridStartEnd(grid)
+    const { startPoint } = findGridStartEnd(grid)
     const wallGrid = grid.map((row, rowIdx) => row.map((node, colIdx) => ({type:'wall', row: rowIdx, col: colIdx})))
     const wallList = []
     wallGrid[startPoint.row][startPoint.col].type = 'path'
