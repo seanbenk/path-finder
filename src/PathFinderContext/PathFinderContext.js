@@ -76,8 +76,6 @@ export function PathFinderProvider(props){
 
     const runDijkstra = () => {
         const { visitedNodesInOrder, nodesOfShortestPath } = dijkstra(nodesGrid)
-        console.log(visitedNodesInOrder)
-        console.log(nodesOfShortestPath)
         drawDijkstra(visitedNodesInOrder, nodesOfShortestPath)
     }
 
@@ -88,9 +86,11 @@ export function PathFinderProvider(props){
             })
             setTimeout(() => {
                 drawDijkstra(visitedNodesInOrder, shortestPath, index + 1)
-            }, 30);
+            }, 0);
         } else {
-            drawShortestPath(shortestPath)
+            if(shortestPath){
+                drawShortestPath(shortestPath)
+            }
         }
     }
 

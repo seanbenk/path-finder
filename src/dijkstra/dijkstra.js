@@ -11,29 +11,32 @@ export default function dijkstra(grid){
     const visitedNodesInOrder = []
     const unvisitedNodes = flattenDeep(grid)
 
-    let endPointFound = false
-
-    while(!endPointFound){
+    while(unvisitedNodes.length > 0){
 
         sortByDistance(unvisitedNodes)
 
         const currentNode = unvisitedNodes.shift()
+        if(currentNode.distance === Infinity){
+            return {  visitedNodesInOrder, nodesOfShortestPath: false }
+        }
 
-        currentNode.getNeighbourCoords().forEach(coord => {
-            const node = unvisitedNodes[idxFromCoord(unvisitedNodes, coord.row, coord.col)]
+        const neighbourNodes = currentNode.getNeighbourCoords().map(coord  => unvisitedNodes[idxFromCoord(unvisitedNodes, coord.row, coord.col)])
+
+        neighbourNodes.forEach(node => {
             if(node && !node.isWall){
-                unvisitedNodes[idxFromCoord(unvisitedNodes, coord.row, coord.col)].distance = currentNode.distance + 1
+                unvisitedNodes[idxFromCoord(unvisitedNodes, node.row, node.col)].distance = currentNode.distance + 1
             }
         });
 
         visitedNodesInOrder.push(currentNode)
 
-        if(currentNode.isEndPoint){endPointFound = true}
+        if(currentNode.isEndPoint){
+            const nodesOfShortestPath = getShortestPath(visitedNodesInOrder)
+            return {  visitedNodesInOrder, nodesOfShortestPath }
+        }
     }
-    
-    const nodesOfShortestPath = getShortestPath(visitedNodesInOrder)
 
-    return {  visitedNodesInOrder, nodesOfShortestPath }
+    return {  visitedNodesInOrder, nodesOfShortestPath: false }
 }
 
 function sortByDistance(arr){
@@ -65,7 +68,8 @@ function getShortestPath(visitedNodes){
 
     while(currNode.distance !== 0){
         shortestPath.unshift(currNode)
-        currNode.getNeighbourCoords().forEach(coord => {
+        const currNodeNeighbourCoords = currNode.getNeighbourCoords()
+        currNodeNeighbourCoords.forEach(coord => {
             if(idxFromCoord(visitedNodes, coord.row, coord.col) >= 0){
                 if(visitedNodes[idxFromCoord(visitedNodes, coord.row, coord.col)].distance === currNode.distance - 1){
                     currNode = visitedNodes[idxFromCoord(visitedNodes, coord.row, coord.col)]
@@ -73,6 +77,5 @@ function getShortestPath(visitedNodes){
             }
         })
     }
-    console.log(shortestPath)
     return shortestPath
 }
