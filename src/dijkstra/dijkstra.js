@@ -1,3 +1,4 @@
+/* eslint no-loop-func: off */
 import { flattenDeep, cloneDeep } from 'lodash'
 
 export default function dijkstra(grid){
