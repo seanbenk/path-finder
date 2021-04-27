@@ -11,7 +11,7 @@ import tutorialModes from '../images/tutorial/tutorial-modes.png'
 
 export default function Tutorial(){
 
-    const { showTutorial, setShowTutorial } = useContext(PathFinderContext)
+    const { setShowTutorial } = useContext(PathFinderContext)
 
     function hideTutorial(){
         setShowTutorial(false)
@@ -20,7 +20,7 @@ export default function Tutorial(){
     return (
         <section className="tutorial-section">
             <div className='tutorial-wrapper'>
-                <span class="material-icons close-icon" onClick={hideTutorial}>close</span>
+                <span className="material-icons close-icon" onClick={hideTutorial}>close</span>
                     <Carousel showStatus={false} showThumbs={false} autoPlay={true} interval="8000" infiniteLoop={true}>
                         <div className="carousel-item"><img src={tutorialGoImg} alt=""/></div>
                         <div className="carousel-item"><img src={tutorialDrawing} alt=""/></div>
