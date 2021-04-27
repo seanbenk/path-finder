@@ -1,0 +1,46 @@
+.tutorial-section{
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    display: grid;
+    place-content: center;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.tutorial-wrapper{
+    height: 75vh;
+    width: 75vw;
+    background-color: #44e6f2;
+    position: relative;
+    border-radius: 2vh;
+    display: grid;
+    place-items: center;
+}
+
+.tutorial-wrapper .close-icon{
+    color: white;
+    font-size: 6rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    transition: all 300ms;
+}
+
+.tutorial-wrapper .close-icon:hover{
+    color: #f7ea30;
+}
+
+.carousel-root, .carousel{
+    height: 100%;
+}
+
+.carousel-wrapper{
+    height: 75%;
+    width: 75%;
+}
+
+div.carousel-item{
+    height: 90%;
+    width: 90%;
+}
