@@ -114,7 +114,7 @@ export default function PathFinderGrid(){
                     <li>GO!</li>
                     <li>Reset Grid</li>
                     <li className="mode-switch"><span>Grid/Road</span><input type="checkbox" disabled="true"/></li>
-                    <li><span class="material-icons info">info</span></li>
+                    <li><span class="material-icons info">help_outline</span></li>
                 </ul>
             </nav>
             :
