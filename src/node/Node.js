@@ -1,6 +1,12 @@
+/* eslint no-unreachable: off */
 import './Node.css'
 import { useContext } from 'react'
 import { PathFinderContext } from '../PathFinderContext/PathFinderContext.js'
+import blueHouse from '../images/blue-house.png'
+import redHouse from '../images/red-house.png'
+import tree1 from '../images/tree-1.png'
+import tree2 from '../images/tree-2.png'
+import fireHydrant from '../images/fire-hydrant.png'
 import straightRoadHorizontal from  '../images/straight-road-horizontal.png'
 import straightRoadVertical from  '../images/straight-road-vertical.png'
 import cornerRoadLeftDown from '../images/corner-road-left-down.png'
@@ -16,12 +22,13 @@ import singleRoadRight from '../images/single-road-right.png'
 import singleRoadBottom from '../images/single-road-bottom.png'
 import singleRoadLeft from '../images/single-road-left.png'
 import allRoad from  '../images/all-road.png'
+import car from  '../images/car.png'
 
 export default function Node(props){
 
-    const { isStartPoint, isEndPoint, isWall, isVisited, isPath, row, col, gridMode, roadType } = props.data
+    const { isStartPoint, isEndPoint, isWall, isVisited, isPath, row, col, roadType, isCar } = props.data
 
-    const { isMouseDown, updateNodes, selectedNode } = useContext(PathFinderContext)
+    const { isMouseDown, updateNodes, selectedNode, nodeImages, isGridMode } = useContext(PathFinderContext)
 
     function getNodeClasses(){
         return `node${isStartPoint?' start-node':''}${isEndPoint?' end-node':''}${isWall?' wall-node':''}${isVisited?' visited-node':''}${isPath?' path-node':''}`
@@ -34,8 +41,27 @@ export default function Node(props){
     }
 
     function getStyle(){
-        if(!gridMode){
-            if(isStartPoint || isEndPoint || isWall){return {}}
+        if(!isGridMode){
+            if(isStartPoint){
+                return {backgroundImage: `url(${blueHouse})`,
+                        backgroundColor: '#7DD669'}
+            } else if(isEndPoint){
+                return {backgroundImage: `url(${redHouse})`,
+                        backgroundColor: '#7DD669'}
+            } else if(isWall){
+                switch(nodeImages[row][col]){
+                    case 'tree1': 
+                    return {backgroundImage: `url(${tree1})`}
+                    case 'tree2': 
+                    return {backgroundImage: `url(${tree2})`}
+                    case 'fireHydrant': 
+                    return {backgroundImage: `url(${fireHydrant})`}
+                    default: return {}
+                }
+            } else if(isCar){
+                return {backgroundImage: `url(${car})`,
+                        backgroundColor: '#474747'}
+            }
             return {backgroundImage: `url(${getRoadImage()})`}
         }
     }

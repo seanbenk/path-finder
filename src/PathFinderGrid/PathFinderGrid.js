@@ -1,11 +1,13 @@
+/* eslint no-unreachable: off */
 import './PathFinderGrid.css'
 import { useContext } from 'react'
 import { PathFinderContext } from '../PathFinderContext/PathFinderContext.js'
+import Tutorial from  '../Tutorial/Tutorial.js'
 import Node from '../Node/Node.js'
 
 export default function PathFinderGrid(){
 
-    const { nodesGrid, setIsMouseDown, selectNode, runDijkstra, resetGrid, newMaze, gridMode, toggleGridMode } = useContext(PathFinderContext)
+    const { showTutorial, setShowTutorial, nodesGrid, setIsMouseDown, selectNode, runDijkstra, resetGrid, newMaze, toggleGridMode, blockClicks, isGridMode } = useContext(PathFinderContext)
 
     const renderNodesGrid = () => {
         return (
@@ -23,8 +25,8 @@ export default function PathFinderGrid(){
                                         isWall: node.isWall,
                                         isVisited: node.isVisited,
                                         isPath: node.isPath,
-                                        gridMode,
-                                        roadType: getRoadType(node)
+                                        roadType: getRoadType(node),
+                                        isCar: node.isCar
                                     }}/>                            
                                 )
                             })
@@ -84,7 +86,7 @@ export default function PathFinderGrid(){
                 }
                 return 't-int-road-right'
                 break;
-            case 4:
+            default:
                 return 'all-road'
                 break;
         }
@@ -92,6 +94,7 @@ export default function PathFinderGrid(){
     }
 
     function setMouseDown(e){
+        if(blockClicks){return}
         setIsMouseDown(true)
         selectNode(e.target.dataset.row, e.target.dataset.col)
     }
@@ -102,21 +105,31 @@ export default function PathFinderGrid(){
 
     return (
         <div>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></link>
+            {showTutorial?<Tutorial/>:false}
+            {blockClicks? 
             <nav>
                 <ul>
-                    <li onClick={runDijkstra}>Find Shortest Path</li>
-                    <li onClick={newMaze}>Generate Maze</li>
-                    <li onClick={resetGrid}>Reset Grid</li>
-                    <li onClick={toggleGridMode}>Grid/Road</li>
+                    <li>Generate Maze</li>
+                    <li>GO!</li>
+                    <li>Reset Grid</li>
+                    <li className="mode-switch"><span>Grid/Road</span><input type="checkbox" disabled="true"/></li>
+                    <li><span class="material-icons info">info</span></li>
                 </ul>
             </nav>
+            :
+            <nav>
+                <ul>
+                    <li onClick={newMaze}>Generate Maze</li>
+                    <li onClick={runDijkstra}>GO!</li>
+                    <li onClick={resetGrid}>Reset Grid</li>
+                    <li className="mode-switch"><span>Grid/Road</span><input type="checkbox" onClick={toggleGridMode}/></li>
+                    <li><span className="material-icons info"  onClick={() => setShowTutorial(true)}>help_outline</span></li>
+                </ul>
+            </nav>}
             <section className="grid-section">
                 {renderNodesGrid()}
             </section>
         </div>
     )
-}
-
-function nodeCornerPosition(node, nNodes){
-
 }

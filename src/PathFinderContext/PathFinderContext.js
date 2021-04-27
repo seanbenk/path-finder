@@ -1,5 +1,5 @@
 import { createContext, useState } from 'react'
-import { cloneDeep } from 'lodash'
+import { random, sample, cloneDeep } from 'lodash'
 import dijkstra from '../dijkstra/dijkstra.js'
 import { findGridStartEnd, primsMazeGen } from '../mazeGeneration/mazeGeneration.js'
 
@@ -8,16 +8,32 @@ export const PathFinderContext = createContext()
 
 export function PathFinderProvider(props){
 
-    const [nodesGrid, setNodesGrid] = useState(getNewGrid(25, 10, {row: 4, col: 3}, {row: 4, col: 6}))
+    const [showTutorial, setShowTutorial] = useState(true)
+
+    const [nodesGrid, setNodesGrid] = useState(getNewGrid(25, 10, {row: 4, col: 4}, {row: 4, col: 20}))
 
     const [isMouseDown, setIsMouseDown] = useState(false)
 
     const [selectedNode, setSelectedNode] = useState(null)
 
-    const [gridMode, setGridMode] = useState(false)
+    const [isGridMode, setIsGridMode] = useState(true)
+
+    const [blockClicks, setBlockClicks] = useState(false)
+
+    const [justDrawn, setJustDrawn] = useState(false)
+
+    const [nodeImages, setNodeImages] = useState(createImgGrid())
+
+    function createImgGrid(){
+        const images = ['tree1', 'tree2', 'fireHydrant']
+        return nodesGrid.map(row => row.map(node => {
+            if(random(0,4) < 4){return ''}
+                return sample(images)
+        }))
+    }
 
     function toggleGridMode(){
-        setGridMode(prevMode => !prevMode)
+        setIsGridMode(prevMode => !prevMode)
     }
 
     //Takes a width and height and new start/end points, reset the nodes 
@@ -26,6 +42,7 @@ export function PathFinderProvider(props){
     }
 
     const selectNode = (row, col) => {
+        if(justDrawn){resetIsVisitedAndPath()}
         setSelectedNode(() => {
                 updateNodes(row, col, nodesGrid[Number(row)][Number(col)])
                 return nodesGrid[Number(row)][Number(col)]
@@ -66,27 +83,45 @@ export function PathFinderProvider(props){
     }
 
     const resetGrid = () => {
-        setNodesGrid((prevGrid) => {
-            console.log(prevGrid)
-            return prevGrid.map(row => {
-                return row.map( node => {
-                    node.isWall = false
-                    node.isVisited = false
-                    node.isPath = false
-                    node.distance = Infinity
-                    return node
+        if(isGridMode){
+            setNodeImages(createImgGrid)
+            setNodesGrid((prevGrid) => {
+                return prevGrid.map(row => {
+                    return row.map( node => {
+                        node.isWall = false
+                        node.isVisited = false
+                        node.isPath = false
+                        node.distance = Infinity
+                        return node
+                    })
                 })
             })
-        })
+        } else {
+            setNodeImages(createImgGrid)
+            setNodesGrid((prevGrid) => {
+                return prevGrid.map(row => {
+                    return row.map( node => {
+                        node.isWall = node.isEndPoint||node.isStartPoint?false:true
+                        node.isVisited = false
+                        node.isPath = false
+                        node.distance = Infinity
+                        return node
+                    })
+                })
+            })
+        }
     }
 
     const runDijkstra = () => {
         const { visitedNodesInOrder, nodesOfShortestPath } = dijkstra(nodesGrid)
+        setBlockClicks(true)
+        setJustDrawn(true)
+        resetIsVisitedAndPath()
         drawDijkstra(visitedNodesInOrder, nodesOfShortestPath)
     }
 
     const drawDijkstra = (visitedNodesInOrder, shortestPath, index = 0) => {
-        if(index < visitedNodesInOrder.length){
+        if(index < visitedNodesInOrder.length && isGridMode){
             setNodesGrid((prevGrid) => {
                 return addVisitedNode(prevGrid, visitedNodesInOrder[index])
             })
@@ -96,19 +131,37 @@ export function PathFinderProvider(props){
         } else {
             if(shortestPath){
                 drawShortestPath(shortestPath)
-            }
+            } else{ setBlockClicks(false) }
         }
     }
 
     const drawShortestPath = (shortestPath, index = 0) => {
-        if(index < shortestPath.length){
-            setNodesGrid((prevGrid) => {
-                return addPathNode(prevGrid, shortestPath[index])
-            })
-            setTimeout(() => {
-                drawShortestPath(shortestPath, index + 1)
-            }, 100);
+        if(isGridMode){
+            if(index < shortestPath.length){
+                setNodesGrid((prevGrid) => {
+                    return addPathNode(prevGrid, shortestPath[index])
+                })
+                setTimeout(() => {
+                    drawShortestPath(shortestPath, index + 1)
+                }, 100);
+            } else { setBlockClicks(false) }
+        } else {
+            //If in road mode
+            if(index < shortestPath.length-1){
+                setNodesGrid((prevGrid) => {
+                    const newNodesGrid = addPathNode(prevGrid, shortestPath[index])
+                    newNodesGrid[shortestPath[index].row][shortestPath[index].col].isCar = true
+                    if(index > 0){
+                        newNodesGrid[shortestPath[index-1].row][shortestPath[index-1].col].isCar = false                      
+                    }
+                    return newNodesGrid
+                })
+                setTimeout(() => {
+                    drawShortestPath(shortestPath, index + 1)
+                }, 100);
+            } else { setBlockClicks(false) }
         }
+        
     }
 
     const addVisitedNode = (grid, coord) =>{
@@ -149,10 +202,20 @@ export function PathFinderProvider(props){
         setNodesGrid(newMaze)
     }
 
+    const resetIsVisitedAndPath = () => {
+        setNodesGrid(prevGrid => {
+            return prevGrid.map(row => row.map(node => {
+                node.isVisited = false;
+                node.isPath = false;
+                return node
+            }))
+        })
+    }
+
     return (
         <PathFinderContext.Provider 
         value={{
-            nodesGrid, setNodesGrid, makeNewGrid, isMouseDown, setIsMouseDown, selectNode, updateNodes, selectedNode, resetGrid, runDijkstra, newMaze, gridMode, toggleGridMode
+            showTutorial, setShowTutorial, nodesGrid, setNodesGrid, makeNewGrid, isMouseDown, setIsMouseDown, selectNode, updateNodes, selectedNode, resetGrid, runDijkstra, newMaze, isGridMode, toggleGridMode, blockClicks, justDrawn, setJustDrawn, resetIsVisitedAndPath, nodeImages
         }}>
             {props.children}
         </PathFinderContext.Provider>
@@ -176,6 +239,7 @@ class NodeObj{
         this.isPath = isPath
         this.distance = Infinity
         this.isVisitedMAZE = false
+        this.isCar = false
     }
     //Gets the neighbouring coords of nodes that will exist in the current state (up, right, down, left)
     getNeighbourCoords(){
