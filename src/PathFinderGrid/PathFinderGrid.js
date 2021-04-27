@@ -7,7 +7,7 @@ import Node from '../Node/Node.js'
 
 export default function PathFinderGrid(){
 
-    const { showTutorial, setShowTutorial, nodesGrid, setIsMouseDown, selectNode, runDijkstra, resetGrid, newMaze, toggleGridMode, blockClicks, isGridMode } = useContext(PathFinderContext)
+    const { showTutorial, setShowTutorial, nodesGrid, setIsMouseDown, selectNode, runDijkstra, resetGrid, newMaze, toggleGridMode, blockClicks } = useContext(PathFinderContext)
 
     const renderNodesGrid = () => {
         return (
