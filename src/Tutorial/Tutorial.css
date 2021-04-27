@@ -4,17 +4,21 @@
     width: 100vw;
     display: grid;
     place-content: center;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1;
 }
 
 .tutorial-wrapper{
     height: 75vh;
     width: 75vw;
-    background-color: #44e6f2;
+    background-color: #00c2d1;
     position: relative;
     border-radius: 2vh;
-    display: grid;
-    place-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    overflow: hidden;
 }
 
 .tutorial-wrapper .close-icon{
@@ -22,25 +26,34 @@
     font-size: 6rem;
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
     cursor: pointer;
     transition: all 300ms;
+    z-index: 3;
+    animation: shake 10s infinite linear;
 }
 
 .tutorial-wrapper .close-icon:hover{
     color: #f7ea30;
 }
 
-.carousel-root, .carousel{
-    height: 100%;
-}
-
-.carousel-wrapper{
-    height: 75%;
-    width: 75%;
-}
-
 div.carousel-item{
-    height: 90%;
-    width: 90%;
+    height: 100%;
+    width: 100%;
+}
+
+div.carousel-item img{
+    height: 100%;
+    width: 100%;
+}
+
+@keyframes shake {
+    40%{transform: rotate(0deg);}
+    41%{transform: rotate(20deg);}
+    42%{transform: rotate(-20deg);}
+    43%{transform: rotate(0deg);}
+    90%{transform: rotate(0deg);}
+    91%{transform: rotate(-20deg);}
+    92%{transform: rotate(20deg);}
+    93%{transform: rotate(0deg);}
 }
