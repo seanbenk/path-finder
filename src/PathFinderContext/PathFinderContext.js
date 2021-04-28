@@ -25,10 +25,14 @@ export function PathFinderProvider(props){
     const [nodeImages, setNodeImages] = useState(createImgGrid())
 
     function createImgGrid(){
-        const images = ['tree1', 'tree2', 'fireHydrant']
+        const commonImages = ['tree1', 'tree2', 'tree3']
+        const rareImages = ['fireHydrant', 'swing']
         return nodesGrid.map(row => row.map(node => {
-            if(random(0,4) < 4){return ''}
-                return sample(images)
+            if(random(0,5) < 5){return ''}
+            if(random(0,6) > 5){
+                return sample(rareImages)
+            }
+                return sample(commonImages)
         }))
     }
 

@@ -19,6 +19,7 @@ export default function Tutorial(){
 
     return (
         <section className="tutorial-section">
+            <h1 className="tutorial-header">TUTORIAL</h1>
             <div className='tutorial-wrapper'>
                 <span className="material-icons close-icon" onClick={hideTutorial}>close</span>
                     <Carousel showStatus={false} showThumbs={false} autoPlay={true} interval="8000" infiniteLoop={true}>

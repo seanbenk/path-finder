@@ -6,6 +6,8 @@ import blueHouse from '../images/blue-house.png'
 import redHouse from '../images/red-house.png'
 import tree1 from '../images/tree-1.png'
 import tree2 from '../images/tree-2.png'
+import tree3 from '../images/tree-3.png'
+import swing from '../images/swing.png'
 import fireHydrant from '../images/fire-hydrant.png'
 import straightRoadHorizontal from  '../images/straight-road-horizontal.png'
 import straightRoadVertical from  '../images/straight-road-vertical.png'
@@ -54,6 +56,10 @@ export default function Node(props){
                     return {backgroundImage: `url(${tree1})`}
                     case 'tree2': 
                     return {backgroundImage: `url(${tree2})`}
+                    case 'tree3': 
+                    return {backgroundImage: `url(${tree3})`}
+                    case 'swing': 
+                    return {backgroundImage: `url(${swing})`}
                     case 'fireHydrant': 
                     return {backgroundImage: `url(${fireHydrant})`}
                     default: return {}
