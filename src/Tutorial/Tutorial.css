@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Freckle+Face&display=swap');
+
 .tutorial-section{
     position: fixed;
     height: 100vh;
@@ -19,6 +21,16 @@
     align-items: center;
     z-index: 1;
     overflow: hidden;
+}
+
+.tutorial-section .tutorial-header{
+    font-family: 'Freckle Face', cursive;
+    font-size: 4rem;
+    padding: 0;
+    margin: 0;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    color: #f7ea30;
+    z-index: 1;
 }
 
 .tutorial-wrapper .close-icon{
